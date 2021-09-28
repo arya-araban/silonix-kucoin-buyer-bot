@@ -16,7 +16,7 @@ kc_api_passphrase = config.api_passphrase
 kc_client = Client(kc_api_key, kc_api_secret, kc_api_passphrase)
 
 # TUNABLE PARAMETERS
-CHANNEL_NAME = 'pmptst'  # kucoin_pumps OR KucoinPumpChannel
+CHANNEL_NAME = 'KucoinPumpChannel'  # kucoin_pumps OR KucoinPumpChannel
 COIN_AMOUNT = sys.maxsize  # coin amount to buy. Set this a high value to buy all of your current USDT
 
 
