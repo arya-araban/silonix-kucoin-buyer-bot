@@ -12,7 +12,7 @@ kc_client = Client(config.api_key, config.api_secret, config.api_passphrase)
 
 # TUNABLE PARAMETERS
 CHANNEL_NAME = 'pmptst'  # kucoin_pumps OR KucoinPumpChannel
-COIN_AMOUNT = 10000  # coin amount to buy. Set this a high value to buy all of your current USDT
+COIN_AMOUNT = '10000'  # coin amount to buy. Set this a high value to buy all of your current USDT
 
 
 def extract_coin_name(txt):
