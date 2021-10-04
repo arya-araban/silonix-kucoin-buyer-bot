@@ -1,7 +1,9 @@
+from threading import Thread
+
 from config import kc_client, tel_client
 from kucoin.client import Client
 from telethon import events
-from rsrcs.useful_funcs import extract_coin_name
+from rsrcs.useful_funcs import extract_coin_name, time_notification
 from rsrcs.coin_lib import sell_on_target, keyboard_sell
 
 # ESSENTIAL TUNABLE PARAMETERS!
@@ -22,6 +24,8 @@ def main(sell_target=False):
         entry_price = kc_client.get_fiat_prices(symbol=c_name)[c_name]  # or take from bid?
         print(f"{order} --- {entry_price}")
 
+        Thread(target=time_notification, args=[6]).start()  # starting a thread which prints time elapsed every n secs
+
         num_decimals = kc_client.get_order_book(c_name + '-USDT')['bids'][0][0][::-1].find('.')
         deal_amount = f'%.{num_decimals}f' % (float(kc_client.get_order(order['orderId'])['dealSize']) * 0.999)
         # multiply by 0.999 to make sure we have enough balance to sell!
@@ -38,4 +42,4 @@ def main(sell_target=False):
 
 
 if __name__ == "__main__":
-    main(sell_target=True)
+    main(sell_target=False)

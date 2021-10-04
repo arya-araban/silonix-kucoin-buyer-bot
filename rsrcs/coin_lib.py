@@ -55,3 +55,5 @@ def keyboard_sell(coin_name, coin_amount):
 
     my_timer = threading.Timer(0, key)
     my_timer.start()
+
+
