@@ -26,7 +26,7 @@ def main(sell_target=False):
 
         Thread(target=time_notification, args=[6]).start()  # starting a thread which prints time elapsed every n secs
 
-        num_decimals = kc_client.get_order_book(c_name + '-USDT')['bids'][0][0][::-1].find('.')
+        num_decimals = kc_client.get_order_book(c_name + '-USDT')['asks'][0][0][::-1].find('.')
         deal_amount = f'%.{num_decimals}f' % (float(kc_client.get_order(order['orderId'])['dealSize']) * 0.999)
         # multiply by 0.999 to make sure we have enough balance to sell!
         keyboard_sell(coin_name=c_name,

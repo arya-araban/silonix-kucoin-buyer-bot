@@ -1,18 +1,18 @@
-import sys
-
+from config import kc_client
 from kucoin.client import Client
-import config
 import time
-
-# KuCoin API values
-kc_client = Client(config.api_key, config.api_secret, config.api_passphrase)
-# currencies = kc_client.get_currencies(); print(currencies)
+from rsrcs.coin_lib import keyboard_buy
 
 # TUNABLE PARAMETERS
-DESIRED_TIME_UTC = "22:07:10"  # Put this the time in which the coin will be releasing
-COIN_NAME = "BTC"
+DESIRED_TIME_UTC = "16:54:00"  # Put this the time in which the coin will be releasing
+COIN_NAME = "ROUTE"
 COIN_AMOUNT = '10000'  # coin amount to buy. Set this a high value to buy all of your current USDT
-PRICE_OFFSET_PERCENTAGE = 1 / 4  # offset percentage to buy higher ie 1 means 1% higher. 0 means no price offset
+
+USDT_AMOUNT = 40  # amount of usdt to buy with. make sure this is less than your current USDT balance
+PRICE_OFFSET_PERCENTAGE = 0.25  # offset percentage to buy higher ie 1 means 1% higher. 0 means no price offset
+
+
+# around 5 to 10 percent for world premiers, and 1 to 5 for normal new listings.
 
 
 def market_order():
@@ -26,19 +26,16 @@ def market_order():
         time.sleep(1)
 
 
-def limit_order():
+def main():
     while True:
         nowgmt = time.strftime("%H:%M:%S", time.gmtime())
         print(nowgmt)
         if nowgmt == DESIRED_TIME_UTC:
-            coin_price = kc_client.get_fiat_prices(base="USD", symbol="BTC")
-            coin_price += coin_price * (PRICE_OFFSET_PERCENTAGE / 100)
-            order = kc_client.create_limit_order(COIN_NAME + "-USDT", Client.SIDE_BUY, price=coin_price,
-                                                 size=COIN_AMOUNT)
-            print(order)
+            print("buying open! press 'b' to buy!")
+            keyboard_buy(COIN_NAME, USDT=USDT_AMOUNT, offset=PRICE_OFFSET_PERCENTAGE)
             break
         time.sleep(1)
 
 
-if __name__ == "__main__":  # this shows that what we are running is a script
-    market_order()
+if __name__ == "__main__":
+    main()
