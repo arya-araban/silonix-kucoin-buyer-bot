@@ -1,5 +1,9 @@
 # kucoin_buyer
 
-A script which buys newly listed Tokens on Kucoin as soon as they are released. This is done with the help of announcments in Kucoin's main Telegram channel.
+A script which allows buying newly listed Tokens on Kucoin as soon as they are released. 
 
-There is also another script which buys tokens as soon as they have been announced to pump (in the channels "kucoin_pumps" or "KucoinPumpChannel")
+There is also another script which buys tokens as soon as they have been announced to pump (by scraping a Telegram pump channel's announcment)
+
+### notes 
+- For pumps, the announcment message must contain a link to the announced token.<br/>
+example message: " The token to pump is BTC - https://trade.kucoin.com/BTC-USDT " 
