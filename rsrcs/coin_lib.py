@@ -47,6 +47,7 @@ def keyboard_buy(coin_name, USDT, offset):
 
     def buy_keypress(*key):
         if key[0] == KeyCode.from_char('b'):
+
             print('\nlimit buy new listing!')
             cur_price = float(kc_client.get_fiat_prices(symbol=coin_name)[coin_name])  # get fiat or use asks
             cur_price += cur_price * (offset / 100)
@@ -56,6 +57,16 @@ def keyboard_buy(coin_name, USDT, offset):
             order_id = kc_client.create_limit_order(coin_name + "-USDT", Client.SIDE_BUY, price=cur_price,
                                                     size=buy_amount)
             print(f"limit buy order {order_id} happened!")
+
+        if key[0] == KeyCode.from_char('m'):
+
+            print('\nmarket buy new listing!')
+            cur_price = float(kc_client.get_fiat_prices(symbol=coin_name)[coin_name])
+            num_decimals = kc_client.get_order_book(coin_name + '-USDT')['bids'][0][0][::-1].find('.')
+            buy_amount = f'%.{num_decimals}f' % (USDT / cur_price)
+            order_id = kc_client.create_market_order(coin_name + "-USDT", Client.SIDE_BUY,
+                                                    size=buy_amount)
+            print(f"market buy order {order_id} happened!")
 
     def key():  ## starts listener module
         with Listener(on_press=buy_keypress) as listener:

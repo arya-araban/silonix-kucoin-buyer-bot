@@ -7,8 +7,8 @@ from rsrcs.useful_funcs import extract_coin_name, time_notification
 from rsrcs.coin_lib import sell_on_target, keyboard_sell
 
 # ESSENTIAL TUNABLE PARAMETERS!
-CHANNEL_NAME = 'pmptst'  # kucoin_pumps OR KucoinPumpChannel OR PumpItUp
-COIN_AMOUNT = '1000000'  # coin amount to buy. Set this a high value to buy all of your current USDT
+CHANNEL_NAME = 'WSB_CryptoPumpSignal'  # kucoin_pumps OR KucoinPumpChannel OR WSB_CryptoPumpSignal OR MonacoPumpGroup
+COIN_AMOUNT = '10000000'  # coin amount to buy. Set this a high value to buy all of your current USDT
 
 # NON-ESSENTIAL
 TARGET_SELL_PERCENTAGE = 100
@@ -26,8 +26,8 @@ def main(sell_target=False):
 
         Thread(target=time_notification, args=[6]).start()  # starting a thread which prints time elapsed every n secs
 
-        num_decimals = kc_client.get_order_book(c_name + '-USDT')['asks'][0][0][::-1].find('.')
-        deal_amount = f'%.{num_decimals}f' % (float(kc_client.get_order(order['orderId'])['dealSize']) * 0.999)
+        num_decimals = kc_client.get_order_book(c_name + '-USDT')['bids'][0][0][::-1].find('.')
+        deal_amount = f'%.{num_decimals}f' % (float(kc_client.get_order(order['orderId'])['dealSize']) * 0.998)
         # multiply by 0.999 to make sure we have enough balance to sell!
         keyboard_sell(coin_name=c_name,
                       coin_amount=deal_amount)  # enable keypress sell option. "m" for market and "l" for limit
