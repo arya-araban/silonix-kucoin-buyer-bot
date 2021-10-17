@@ -1,0 +1,17 @@
+from kucoin.client import Client
+from telethon import TelegramClient
+
+# Telegram Information!
+api_id = 'Your Telegram API ID'
+api_hash = 'Your Telegram API hash'
+
+# Telegram client creation 
+tel_client = TelegramClient('anon', api_id, api_hash)
+
+# KuCoin Information!
+api_key = 'Your Kucoin API key'
+api_secret = 'Your Kucoin API secret'
+api_passphrase = 'Your Kucoin API passphrase'
+
+# KuCoin Client creation 
+kc_client = Client(api_key, api_secret, api_passphrase)
