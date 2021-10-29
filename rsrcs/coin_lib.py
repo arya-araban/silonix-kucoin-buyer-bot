@@ -56,11 +56,9 @@ def keyboard_buy(coin_name, USDT, offset):
                 0]  # order book first order used to find decimal count
             num_decimals_price = ord_bk_fa[0][::-1].find('.')
             num_decimals_amount = ord_bk_fa[1][::-1].find('.')
-
-            cur_price = f'%.{num_decimals_price}f' % cur_price
+            cur_price = float(f'%.{num_decimals_price}f' % cur_price)  # note cur_price always has to be float
             buy_amount = f'%.{num_decimals_amount}f' % (
-                    USDT / cur_price)  # set this to num_decimals-1 to make sure increment correct
-
+                    USDT / cur_price)
             order_id = kc_client.create_limit_order(coin_name + "-USDT", Client.SIDE_BUY, price=cur_price,
                                                     size=buy_amount)
             print(f"limit buy order {order_id} happened!")
