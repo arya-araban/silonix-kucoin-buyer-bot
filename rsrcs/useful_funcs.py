@@ -2,11 +2,11 @@
 import time
 
 
-def extract_coin_name(txt):
+def extract_coin_name(txt, pairing_type):
     """extract coin name from link.
     finds text between .com and -USDT which is the coin name we are looking for """
     start = '.com/'
-    end = '-USDT'
+    end = f'-{pairing_type}'
     coin_name = txt[txt.find(start) + len(start):txt.rfind(end)]
     return coin_name
 

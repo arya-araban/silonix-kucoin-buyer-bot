@@ -6,7 +6,7 @@ from kucoin.client import Client
 from pynput.keyboard import Listener, KeyCode
 
 
-def keyboard_sell(coin_name, coin_amount):
+def keyboard_sell(coin_name, coin_amount, pairing_type):
     """This function sells with keyboard presses -  USED FOR PUMPS!
     press 'm' to sell on market
     press 'l' to sell on limit (which will be the highest buy ask for the coin)
@@ -16,14 +16,15 @@ def keyboard_sell(coin_name, coin_amount):
         try:
             if key[0] == KeyCode.from_char('l'):
                 print('\nlimit sell!')
-                cur_price = kc_client.get_order_book(coin_name + '-USDT')['asks'][0][0]
-                order = kc_client.create_limit_order(coin_name + "-USDT", Client.SIDE_SELL, price=cur_price,
+                cur_price = kc_client.get_order_book(coin_name + f'-{pairing_type}')['asks'][0][0]
+                order = kc_client.create_limit_order(coin_name + f'-{pairing_type}', Client.SIDE_SELL, price=cur_price,
                                                      size=coin_amount)
                 print(f"limit sell order {order} happened!")
 
             elif key[0] == KeyCode.from_char('m'):
                 print('\nmarket sell!')
-                order = kc_client.create_market_order(coin_name + '-USDT', Client.SIDE_SELL, size=coin_amount)
+                order = kc_client.create_market_order(coin_name + f'-{pairing_type}', Client.SIDE_SELL,
+                                                      size=coin_amount)
                 print(f"market sell order {order} happened!")
         except():
             print("ORDER SELL FAILED")
@@ -84,7 +85,7 @@ def keyboard_buy(coin_name, USDT, offset):
     my_timer.start()
 
 
-def sell_on_target(coin_name, target_price, coin_amount, time_to_check):
+def sell_on_target(coin_name, target_price, coin_amount, time_to_check, pairing_type):
     """
     coin name example: 'BTC'
     entry price is the price of the succeeded order
@@ -96,9 +97,9 @@ def sell_on_target(coin_name, target_price, coin_amount, time_to_check):
                                args=[coin_name, target_price, coin_amount, time_to_check])
     my_timer.start()
 
-    cur_price = kc_client.get_order_book(coin_name + '-USDT')['asks'][0][0]
+    cur_price = kc_client.get_order_book(coin_name + f'-{pairing_type}')['asks'][0][0]
     if target_price < cur_price:
-        order = kc_client.create_limit_order(coin_name + "-USDT", Client.SIDE_SELL, price=target_price,
+        order = kc_client.create_limit_order(coin_name + f'-{pairing_type}', Client.SIDE_SELL, price=target_price,
                                              size=coin_amount)
         print(f"{order} happened! selling on target price {str(target_price)}")
         my_timer.cancel()
