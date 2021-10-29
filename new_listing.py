@@ -1,29 +1,15 @@
-from config import kc_client
-from kucoin.client import Client
 import time
 from rsrcs.coin_lib import keyboard_buy
 
 # TUNABLE PARAMETERS
-DESIRED_TIME_UTC = "12:00:00"  # Put this the time in which the coin will be releasing
-COIN_NAME = "SOLR"
-COIN_AMOUNT = '10000'  # coin amount to buy. Set this a high value to buy all of your current USDT
+DESIRED_TIME_UTC = "09:00:00"  # Put this the time in which the coin will be releasing
+COIN_NAME = "HERO"
 
-USDT_AMOUNT = 30  # amount of usdt to buy with. make sure this is less than your current USDT balance
-PRICE_OFFSET_PERCENTAGE = 9  # offset percentage to buy higher ie 1 means 1% higher. 0 means no price offset
+USDT_AMOUNT = 6 # amount of usdt to buy with. make sure this is less than your current USDT balance
+PRICE_OFFSET_PERCENTAGE =0   # offset percentage to buy higher ie 1 means 1% higher. 0 means no price offset
 
 
 # around 5 to 10 percent for world premiers, and 1 to 5 for normal new listings.
-
-
-def market_order():
-    while True:
-        nowgmt = time.strftime("%H:%M:%S", time.gmtime())
-        print(nowgmt)
-        if nowgmt == DESIRED_TIME_UTC:
-            order = kc_client.create_market_order(COIN_NAME + "-USDT", Client.SIDE_BUY, size=COIN_AMOUNT)
-            print(order)
-            break
-        time.sleep(1)
 
 
 def main():
@@ -42,4 +28,4 @@ def main2():
 
 
 if __name__ == "__main__":
-    main()
+    main2()

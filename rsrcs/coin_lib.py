@@ -26,7 +26,7 @@ def keyboard_sell(coin_name, coin_amount):
                 order = kc_client.create_market_order(coin_name + '-USDT', Client.SIDE_SELL, size=coin_amount)
                 print(f"market sell order {order} happened!")
         except():
-            print("ORDER FAILED")
+            print("ORDER SELL FAILED")
 
     def key():  ## starts listener module
         with Listener(on_press=sell_keypress) as listener:
@@ -39,6 +39,7 @@ def keyboard_sell(coin_name, coin_amount):
 def keyboard_buy(coin_name, USDT, offset):
     """ This function buys with keyboard presses - USED FOR NEW LISTINGS
     press 'B' to create LIMIT ORDER on fiat price.
+    press 'm' to buy market price! note: may not work due to new listing constraint.
 
     "USDT" is the amount of USDT to buy of the token. make sure you have enough USDT in balance
     "offset" is the upper bound percentage difference to place limit on
@@ -47,25 +48,34 @@ def keyboard_buy(coin_name, USDT, offset):
 
     def buy_keypress(*key):
         if key[0] == KeyCode.from_char('b'):
-
             print('\nlimit buy new listing!')
             cur_price = float(kc_client.get_fiat_prices(symbol=coin_name)[coin_name])  # get fiat or use asks
             cur_price += cur_price * (offset / 100)
-            num_decimals = kc_client.get_order_book(coin_name + '-USDT')['bids'][0][0][::-1].find('.')
-            buy_amount = f'%.{num_decimals}f' % (USDT / cur_price)
-            cur_price = f'%.{num_decimals}f' % cur_price
+
+            ord_bk_fa = kc_client.get_order_book(coin_name + '-USDT')['bids'][
+                0]  # order book first order used to find decimal count
+            num_decimals_price = ord_bk_fa[0][::-1].find('.')
+            num_decimals_amount = ord_bk_fa[1][::-1].find('.')
+
+            cur_price = f'%.{num_decimals_price}f' % cur_price
+            buy_amount = f'%.{num_decimals_amount}f' % (
+                    USDT / cur_price)  # set this to num_decimals-1 to make sure increment correct
+
             order_id = kc_client.create_limit_order(coin_name + "-USDT", Client.SIDE_BUY, price=cur_price,
                                                     size=buy_amount)
             print(f"limit buy order {order_id} happened!")
 
         if key[0] == KeyCode.from_char('m'):
-
             print('\nmarket buy new listing!')
             cur_price = float(kc_client.get_fiat_prices(symbol=coin_name)[coin_name])
-            num_decimals = kc_client.get_order_book(coin_name + '-USDT')['bids'][0][0][::-1].find('.')
-            buy_amount = f'%.{num_decimals}f' % (USDT / cur_price)
+
+            ord_bk_fa = kc_client.get_order_book('SOL' + '-USDT')['bids'][
+                0]  # order book first order used to find decimal count
+            num_decimals_amount = ord_bk_fa[1][::-1].find('.')
+
+            buy_amount = f'%.{num_decimals_amount}f' % (USDT / cur_price)
             order_id = kc_client.create_market_order(coin_name + "-USDT", Client.SIDE_BUY,
-                                                    size=buy_amount)
+                                                     size=buy_amount)
             print(f"market buy order {order_id} happened!")
 
     def key():  ## starts listener module
