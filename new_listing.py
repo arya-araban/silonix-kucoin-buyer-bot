@@ -11,18 +11,8 @@ PRICE_OFFSET_PERCENTAGE = 100  # offset percentage to buy higher ie 1 means 1% h
 
 # around 10 to 50 percent for world premiers, and 1 to 5 for normal new listings.
 
+
 def main():
-    while True:
-        nowgmt = time.strftime("%H:%M:%S", time.gmtime())
-        print(nowgmt)
-        if nowgmt == DESIRED_TIME_UTC:
-            print("buying open! press 'b' to buy!")
-            keyboard_buy(COIN_NAME, USDT=USDT_AMOUNT, offset=PRICE_OFFSET_PERCENTAGE)
-            break
-        time.sleep(1)
-
-
-def main2():
     buy_on_time(COIN_NAME, USDT=USDT_AMOUNT, offset=PRICE_OFFSET_PERCENTAGE,
                 desired_time_utc=DESIRED_TIME_UTC)
 
@@ -30,4 +20,4 @@ def main2():
 
 
 if __name__ == "__main__":
-    main2()
+    main()
