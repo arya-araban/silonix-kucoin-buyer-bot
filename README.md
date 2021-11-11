@@ -1,4 +1,4 @@
-# kucoin_buyer
+# kucoin-buyer
 
 A script which allows buying newly listed Tokens on Kucoin as soon as they are released. 
 
