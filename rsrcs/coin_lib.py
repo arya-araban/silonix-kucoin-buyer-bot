@@ -1,10 +1,16 @@
+import json
 import threading
 import time
+from concurrent.futures import as_completed
+
+from requests_futures.sessions import FuturesSession
 
 from config import kc_client
 from kucoin.client import Client
 
 from pynput.keyboard import Listener, KeyCode
+
+from rsrcs.useful_funcs import extract_coin_name
 
 
 def keyboard_sell(coin_name, coin_amount, pairing_type):
@@ -78,6 +84,27 @@ def keyboard_buy(coin_name, USDT, offset):
 
     my_timer = threading.Timer(0, key)
     my_timer.start()
+
+
+def extract_discord_coin_name(channel_id, headers):
+    session = FuturesSession()
+    while True:
+        futures = []
+        for i in range(1):
+            future = session.get(f'https://discord.com/api/v9/channels/{channel_id}/messages?limit=1',
+                                 headers=headers)
+            futures.append(future)
+
+        for future in as_completed(futures):
+            try:
+                last_msg = json.loads(future.result().text)[0]['content']
+                c_name = extract_coin_name(last_msg, "USDT")
+                if (c_name):
+                    # print(c_name)
+                    # print(int(time.time() * 1000))
+                    return c_name
+            except:
+                continue
 
 
 def sell_on_target(coin_name, target_price, coin_amount, time_to_check, pairing_type):
