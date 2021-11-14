@@ -1,5 +1,6 @@
-from threading import Thread
+""" PUMP USING THE TELEGRAM API """
 
+from threading import Thread
 from config import kc_client, tel_client
 from kucoin.client import Client
 from telethon import events
