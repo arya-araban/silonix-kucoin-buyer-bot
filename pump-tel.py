@@ -12,6 +12,7 @@ CHANNEL_NAME = 'kucoin_pumps'  # kucoin_pumps OR MonacoPumpGroup OR kucoin_pump_
 
 COIN_AMOUNT = '10000000'  # coin amount to buy. Set this a high value to buy all of your current USDT
 COIN_PAIRING = 'USDT'  # type of pairing used for listing. either USDT or BTC
+
 # NON-ESSENTIAL
 TARGET_SELL_PERCENTAGE = 100
 

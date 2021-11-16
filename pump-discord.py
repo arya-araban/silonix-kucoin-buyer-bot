@@ -1,4 +1,4 @@
-""" PUMP USING THE TELEGRAM API """
+""" PUMP USING THE DISCORD API """
 import time
 from threading import Thread
 
@@ -14,6 +14,7 @@ CHANNEL_NAME = 'pmp-tst'  # kucoin_pumps OR MonacoPumpGroup OR kucoin_pump_group
 
 COIN_AMOUNT = '10000000'  # coin amount to buy. Set this a high value to buy all of your current USDT
 COIN_PAIRING = 'USDT'  # type of pairing used for listing. either USDT or BTC
+
 # NON-ESSENTIAL
 TARGET_SELL_PERCENTAGE = 100
 

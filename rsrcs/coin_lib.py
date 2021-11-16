@@ -87,6 +87,9 @@ def keyboard_buy(coin_name, USDT, offset):
 
 
 def extract_discord_coin_name(channel_id, headers):
+    """THis function is the main code used for discord scraping. it scraps the last message of the channel with id of
+     {channel_id} each few milliseconds, and checks weather there is a coin name found for pumping or not,
+     so essentially, as soon as pump message is sent out, we get the coin name - USED FOR PUMPS """
     session = FuturesSession()
     while True:
         futures = []
