@@ -8,7 +8,7 @@ from rsrcs.useful_funcs import extract_coin_name, time_notification
 from rsrcs.coin_lib import sell_on_target, keyboard_sell
 
 # ESSENTIAL TUNABLE PARAMETERS!
-CHANNEL_NAME = 'kucoin_pumps'  # kucoin_pumps OR MonacoPumpGroup OR kucoin_pump_group
+CHANNEL_NAME = 'kucoin_pump_group'  # kucoin_pumps OR MonacoPumpGroup OR kucoin_pump_group
 
 COIN_AMOUNT = '10000000'  # coin amount to buy. Set this a high value to buy all of your current USDT
 COIN_PAIRING = 'USDT'  # type of pairing used for listing. either USDT or BTC
