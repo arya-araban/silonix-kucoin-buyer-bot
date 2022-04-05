@@ -7,7 +7,7 @@ from config import kc_client, tel_client
 from kucoin.client import Client
 from telethon import events
 from rsrcs.useful_funcs import extract_coin_name, time_notification
-from rsrcs.coin_lib import sell_on_target, keyboard_sell, extract_discord_coin_name
+from rsrcs.coin_lib_pumps import sell_on_target, keyboard_sell, extract_discord_coin_name
 
 # ESSENTIAL TUNABLE PARAMETERS!
 CHANNEL_NAME = 'pmp-tst'  # kucoin_pumps OR MonacoPumpGroup OR kucoin_pump_group or pmp-tst
