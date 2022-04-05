@@ -37,17 +37,15 @@ def discord_main(sell_target=False):
 
     Thread(target=time_notification, args=[6]).start()  # starting a thread which prints time elapsed every n secs
 
-    ord_bk_fa = kc_client.get_order_book(c_name + f'-{COIN_PAIRING}')['bids'][0]  # order book first order
-    num_decimals_price = ord_bk_fa[0][::-1].find('.')
-    num_decimals_amount = ord_bk_fa[1][::-1].find('.')
-
-    deal_amount = f'%.{num_decimals_amount}f' % (float(kc_client.get_order(order['orderId'])['dealSize']) * 0.998)
-    # multiply by 0.999 to make sure we have enough balance to sell!
     keyboard_sell(coin_name=c_name,
-                  coin_amount=deal_amount,
+                  order_id=order['orderId'],
                   pairing_type=COIN_PAIRING)  # enable keypress sell option. "pg up" for market and "pg down" for limit
 
     if sell_target:
+        ord_bk_fa = kc_client.get_order_book(c_name + f'-{COIN_PAIRING}')['bids'][0]  # order book first order
+        num_decimals_price = ord_bk_fa[0][::-1].find('.')
+        num_decimals_amount = ord_bk_fa[1][::-1].find('.')
+        deal_amount = f'%.{num_decimals_amount}f' % (float(kc_client.get_order(order['orderId'])['dealSize']) * 0.998)
         target_price = f'%.{num_decimals_price}f' % (float(entry_price) * ((TARGET_SELL_PERCENTAGE / 100) + 1))
         # the '%.2f' % is to limit decimals!
         sell_on_target(coin_name=c_name, target_price=target_price, coin_amount=deal_amount, time_to_check=0.8,

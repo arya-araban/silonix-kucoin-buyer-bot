@@ -71,18 +71,3 @@ def limit_buy_token(coin_name, USDT, offset, cur_price=0):
     print(f"limit buy order {order_id} placed!")
     return order_id['orderId']
 
-
-def keyboard_sell_new_listing(coin_name, order_id):
-    """
-        This function sells with keyboard presses -  USED FOR PUMPS!
-        press 'pg up' to sell on market
-        press 'pg down' to sell on limit (which will be the highest buy ask for the coin)
-        usually the optimal time to sell is around one minute after new listing
-    """
-    ord_bk_fa = kc_client.get_order_book(coin_name + '-USDT')['bids'][0]  # order book first order
-    num_decimals_amount = ord_bk_fa[1][::-1].find('.')
-
-    deal_amount = f'%.{num_decimals_amount}f' % (float(kc_client.get_order(order_id)['dealSize']) * 0.998)
-    keyboard_sell(coin_name=coin_name,
-                  coin_amount=deal_amount,
-                  pairing_type='USDT')

@@ -34,11 +34,16 @@ def extract_discord_coin_name(channel_id, headers):
             continue
 
 
-def keyboard_sell(coin_name, coin_amount, pairing_type):
-    """This function sells with keyboard presses -  USED FOR PUMPS!
+def keyboard_sell(coin_name, order_id, pairing_type):
+    """This function sells with keyboard presses -  USED FOR PUMPS & NEW LISTINGS!!
     press 'pg up' to sell on market
     press 'pg down' to sell on limit (which will be the highest buy ask for the coin)
     usually the optimal time to sell is twenty seconds after a pump, or around one minute after new listing """
+
+    ord_bk_fa = kc_client.get_order_book(f"{coin_name}-{pairing_type}")['bids'][0]  # order book first order
+    num_decimals_amount = ord_bk_fa[1][::-1].find('.')
+
+    deal_amount = f'%.{num_decimals_amount}f' % (float(kc_client.get_order(order_id)['dealSize']) * 0.998)
 
     def sell_keypress(*key):
         try:
@@ -46,13 +51,13 @@ def keyboard_sell(coin_name, coin_amount, pairing_type):
                 print('\nlimit sell!')
                 cur_price = kc_client.get_order_book(coin_name + f'-{pairing_type}')['asks'][0][0]
                 order = kc_client.create_limit_order(coin_name + f'-{pairing_type}', Client.SIDE_SELL, price=cur_price,
-                                                     size=coin_amount)
+                                                     size=deal_amount)
                 print(f"limit sell order {order} happened!")
 
             if key[0] == keyboard.Key.page_down:
                 print('\nmarket sell!')
                 order = kc_client.create_market_order(coin_name + f'-{pairing_type}', Client.SIDE_SELL,
-                                                      size=coin_amount)
+                                                      size=deal_amount)
                 print(f"market sell order {order} happened!")
 
         except Exception as err:
