@@ -2,12 +2,12 @@ import time
 from rsrcs.coin_lib import keyboard_buy, buy_on_time
 
 # TUNABLE PARAMETERS
-DESIRED_TIME_UTC = "09:00:04"  # Put this the time in which the coin will be releasing
-COIN_NAME = "TWT"
+DESIRED_TIME_UTC = "11:00:02"  # Put this the time in which the coin will be releasing
+COIN_NAME = "ILA"
 
-USDT_AMOUNT = 30  # amount of usdt to buy with. make sure this is less than your current USDT balance
-RELEASE_OFFSET_PERCENTAGE = 2  # offset percentage to buy higher ie 1 means 1% higher. 0 means no price offset
-KEYBOARD_OFFSET_PERCENTAGE = 1
+USDT_AMOUNT = 40  # amount of usdt to buy with. make sure this is less than your current USDT balance
+RELEASE_OFFSET_PERCENTAGE = 3  # offset percentage to buy higher ie 1 means 1% higher. 0 means no price offset
+KEYBOARD_OFFSET_PERCENTAGE = 3
 
 # around 10 to 50 percent for world premiers, and 1 to 5 for normal new listings.
 

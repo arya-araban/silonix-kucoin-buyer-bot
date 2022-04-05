@@ -26,9 +26,10 @@ discord_channel_ids = {
 }
 
 
-def main(sell_target=False):
+def discord_main(sell_target=False):
     c_name = extract_discord_coin_name(channel_id=discord_channel_ids[CHANNEL_NAME], headers=config.discord_headers)
     # print(int(time.time()*1000))
+    # time.sleep(0.5) #delay for pump order
     order = kc_client.create_market_order(c_name + f'-{COIN_PAIRING}', Client.SIDE_BUY, size=COIN_AMOUNT)
     # print(int(time.time() * 1000))
     entry_price = kc_client.get_fiat_prices(symbol=c_name)[c_name]  # or take from bid?
@@ -44,7 +45,7 @@ def main(sell_target=False):
     # multiply by 0.999 to make sure we have enough balance to sell!
     keyboard_sell(coin_name=c_name,
                   coin_amount=deal_amount,
-                  pairing_type=COIN_PAIRING)  # enable keypress sell option. "m" for market and "l" for limit
+                  pairing_type=COIN_PAIRING)  # enable keypress sell option. "pg up" for market and "pg down" for limit
 
     if sell_target:
         target_price = f'%.{num_decimals_price}f' % (float(entry_price) * ((TARGET_SELL_PERCENTAGE / 100) + 1))
@@ -54,4 +55,4 @@ def main(sell_target=False):
 
 
 if __name__ == "__main__":
-    main(sell_target=False)
+    discord_main(sell_target=False)

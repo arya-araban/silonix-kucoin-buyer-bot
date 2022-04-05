@@ -2,7 +2,7 @@ import json
 import threading
 import time
 from concurrent.futures import as_completed
-
+from pynput import keyboard
 from requests_futures.sessions import FuturesSession
 
 from config import kc_client
@@ -15,33 +15,34 @@ from rsrcs.useful_funcs import extract_coin_name
 
 def keyboard_sell(coin_name, coin_amount, pairing_type):
     """This function sells with keyboard presses -  USED FOR PUMPS!
-    press 'm' to sell on market
-    press 'l' to sell on limit (which will be the highest buy ask for the coin)
+    press 'pg up' to sell on market
+    press 'pg down' to sell on limit (which will be the highest buy ask for the coin)
     usually the optimal time to sell is twenty seconds after a pump, or around one minute after new listing """
 
     def sell_keypress(*key):
         try:
-            if key[0] == KeyCode.from_char('l'):
+            if key[0] == keyboard.Key.page_up:
                 print('\nlimit sell!')
                 cur_price = kc_client.get_order_book(coin_name + f'-{pairing_type}')['asks'][0][0]
                 order = kc_client.create_limit_order(coin_name + f'-{pairing_type}', Client.SIDE_SELL, price=cur_price,
                                                      size=coin_amount)
                 print(f"limit sell order {order} happened!")
 
-            elif key[0] == KeyCode.from_char('m'):
+            elif key[0] == keyboard.Key.page_down:
                 print('\nmarket sell!')
                 order = kc_client.create_market_order(coin_name + f'-{pairing_type}', Client.SIDE_SELL,
                                                       size=coin_amount)
                 print(f"market sell order {order} happened!")
-        except():
+
+        except Exception as err:
             print("ORDER SELL FAILED")
+            print(f"{err.__class__} -- {err}")
 
     def key():  ## starts listener module
         with Listener(on_press=sell_keypress) as listener:
             listener.join()
 
-    my_timer = threading.Timer(0, key)
-    my_timer.start()
+    threading.Thread(target=key).start()
 
 
 def buy_on_time(coin_name, USDT, offset, desired_time_utc):
@@ -72,43 +73,42 @@ def keyboard_buy(coin_name, USDT, offset):
     def buy_keypress(*key):
         cur_order_id = 0
         if key[0] == KeyCode.from_char('b'):
-            print('\nlimit buy new listing!')
-            __limit_buy_token(coin_name, USDT, offset)
+            cur_order_id = __limit_buy_token(coin_name, USDT, offset)
 
         if key[0] == KeyCode.from_char('c'):
             kc_client.cancel_order(cur_order_id)
+
+        if key[0] == KeyCode.from_char('m'):
+            kc_client.create_market_order(coin_name + '-USDT', Client.SIDE_BUY, size=USDT)
 
     def key():  ## starts listener module
         with Listener(on_press=buy_keypress) as listener:
             listener.join()
 
-    my_timer = threading.Timer(0, key)
-    my_timer.start()
+    threading.Thread(target=key).start()
 
 
 def extract_discord_coin_name(channel_id, headers):
-    """THis function is the main code used for discord scraping. it scraps the last message of the channel with id of
+    """This function is the main code used for discord scraping. it scraps the last message of the channel with id of
      {channel_id} each few milliseconds, and checks weather there is a coin name found for pumping or not,
      so essentially, as soon as pump message is sent out, we get the coin name - USED FOR PUMPS """
     session = FuturesSession()
     while True:
-        futures = []
-        for i in range(1):
-            future = session.get(f'https://discord.com/api/v9/channels/{channel_id}/messages?limit=1',
-                                 headers=headers)
-            futures.append(future)
 
-        for future in as_completed(futures):
-            try:
-                last_msg = json.loads(future.result().text)[0]['content']
-                c_name = extract_coin_name(last_msg, "USDT")
-                #print(last_msg)
-                if (c_name):
-                    print(c_name)
-                    # print(int(time.time() * 1000))
-                    return c_name
-            except:
-                continue
+        future = session.get(f'https://discord.com/api/v9/channels/{channel_id}/messages?limit=1',
+                             headers=headers)
+        # print(future)
+
+        try:
+            last_msg = json.loads(future.result().text)[0]['content']
+            c_name = extract_coin_name(last_msg, "USDT")
+            print(last_msg)
+            if c_name:  # if c_name isn't ''
+                print(c_name)
+                return c_name
+        except Exception as err:
+            print(f"{err.__class__} -- {err}")
+            continue
 
 
 def sell_on_target(coin_name, target_price, coin_amount, time_to_check, pairing_type):
@@ -153,3 +153,4 @@ def __limit_buy_token(coin_name, USDT, offset):
     order_id = kc_client.create_limit_order(coin_name + "-USDT", Client.SIDE_BUY, price=cur_price,
                                             size=buy_amount)
     print(f"limit buy order {order_id} happened!")
+    return order_id
