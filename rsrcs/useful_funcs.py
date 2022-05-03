@@ -1,5 +1,6 @@
-import re
 import time
+from art import tprint
+from sty import fg
 
 
 def extract_coin_name(txt, pairing_type):
@@ -13,8 +14,21 @@ def extract_coin_name(txt, pairing_type):
 
 def time_notification(tm):
     """print a notification of elapsed time. run this in a thread for it to be non blocking."""
-    i = 1
+    i = 0
     while True:
+        print(f'\r {fg.cyan + str(tm * i) + fg.rs} seconds have passed since order!', end=" ")
         time.sleep(tm)
-        print(f"{tm * i} seconds have passed since order!")
         i += 1
+
+
+def awaiting_message():
+    i = 0
+    symb = ['|', '/', '--', '\\']
+    while True:
+        print(f'\rAwaiting Coin Message.. {symb[i % len(symb)]}', end=" ")
+        time.sleep(0.5)
+        i += 1
+
+
+def print_bot_name(bot_name=f"TokenVille Bot"):
+    tprint(bot_name, font="small")
