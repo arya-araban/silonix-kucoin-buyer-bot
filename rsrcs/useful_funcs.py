@@ -31,4 +31,4 @@ def awaiting_message():
 
 
 def print_bot_name(bot_name=f"TokenVille Bot"):
-    tprint(bot_name, font="small")
+    tprint(bot_name, font="tarty20")  # tarty3,tarty10, tarty20 chunky,small,ogre

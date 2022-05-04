@@ -105,10 +105,10 @@ def profit_tracker(coin_name, entry_price, refresh_rate=0.3):
         profit = round((float(kc_client.get_fiat_prices(symbol=coin_name)[coin_name]) / entry_price * 100) - 100, 4)
         color = f'{fg.li_green}+' if profit >= 0 else f'{fg.red}'
         print(
-            f'\rTime Elapsed = {fg.blue + str(int(time.time() - start)) + fg.rs} ~ Current Profit = {color + str(profit) + fg.rs}',
+            f'\rTime Elapsed = {fg.blue + str(int(time.time() - start)) + fg.rs} ~ Current Profit = {color + str(profit) + " %" + fg.rs} ',
             end=" ")
 
         """below is the no time elapsed version"""
         # print(f'\rcurrent profit = {color + str(profit) + fg.rs}', end = " ")
-        
+
         time.sleep(refresh_rate)
