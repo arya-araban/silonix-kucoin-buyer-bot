@@ -9,7 +9,7 @@ There is also another script which buys tokens as soon as they have been announc
 example message: " The token to pump is BTC - https://trade.kucoin.com/BTC-USDT "
 
 ## 💖 Made profit? Show support! 
-During the development of this project I envisioned that I would monotize it, However, due to my love to open-source, I've decided to share this application free of charge.  If it has been useful to you, it would go a great way to show your support.
+During the development of this project I envisioned that I would monotize it, However, due to my love for open-source, I've decided to share this application free of charge.  If it has been useful to you, it would go a great way to show your support.
 
 ```bash
 # ETH
