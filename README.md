@@ -4,12 +4,10 @@ Trading bot which allows buying newly listed Tokens on Kucoin as soon as they ar
 
 ## 📚 Notes 
 
-- In order to place sell orders instantaneously after buy order fulfilled, press pg-up to place limit sell order on highest bid order, or pg-down to place market sell order. Note that Market selling guarantees your sell order will go through 
-
 - For pumps, the announcment message must contain a link to the announced token.<br/>
 example message: " The token to pump is BTC - https://trade.kucoin.com/BTC-USDT "
 
-- After buy order has been executed, you can use "pg-down" to perform selling on market price, or "pg-up" to perform limit sell on current best bid price
+- In order to place sell orders instantaneously after buy order fulfilled, press pg-up to place limit sell order on highest bid order, or pg-down to place market sell order. Note that Market selling guarantees your sell order will go through 
 
 ## 💖 Made profit? Show support! 
 During the development of this project I envisioned that I would monotize it, However, due to my love for open-source, I've decided to share this application free of charge.  If it has been useful to you, it would go a great way to show your support.
