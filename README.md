@@ -1,6 +1,6 @@
 # kucoin-buyer
 
-scripts which allow buying newly listed Tokens on Kucoin as soon as they are released, as well as buying tokens as soon as they have been announced to pump (by scraping a Telegram OR Discord pump channel's announcment)
+Trading bot which allow buying newly listed Tokens on Kucoin as soon as they are released, as well as buying tokens as soon as they have been announced to pump (by scraping a Telegram OR Discord pump channel's announcment)
 
 ## 📚 Notes 
 
@@ -8,6 +8,8 @@ scripts which allow buying newly listed Tokens on Kucoin as soon as they are rel
 
 - For pumps, the announcment message must contain a link to the announced token.<br/>
 example message: " The token to pump is BTC - https://trade.kucoin.com/BTC-USDT "
+
+- After buy order has been executed, you can use "pg-down" to perform selling on market price, or "pg-up" to perform limit sell on current best bid price
 
 ## 💖 Made profit? Show support! 
 During the development of this project I envisioned that I would monotize it, However, due to my love for open-source, I've decided to share this application free of charge.  If it has been useful to you, it would go a great way to show your support.
