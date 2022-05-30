@@ -1,6 +1,6 @@
 # kucoin-buyer
 
-Trading bot which allow buying newly listed Tokens on Kucoin as soon as they are released, as well as buying tokens as soon as they have been announced to pump (by scraping a Telegram OR Discord pump channel's announcment)
+Trading bot which allows buying newly listed Tokens on Kucoin as soon as they are released, as well as buying tokens as soon as they have been announced to pump (by scraping a Telegram OR Discord pump channel's announcment)
 
 ## 📚 Notes 
 
