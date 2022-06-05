@@ -9,12 +9,11 @@ from reprint import output
 import config
 from config import kc_client, tel_client
 from kucoin.client import Client
-from telethon import events
 from rsrcs.useful_funcs import extract_coin_name, time_notification, print_bot_name, awaiting_message
 from rsrcs.coin_lib_pumps import sell_on_target, keyboard_sell, extract_discord_coin_name, profit_tracker
 
 # ESSENTIAL TUNABLE PARAMETERS!
-CHANNEL_NAME = 'pmp-tst'  # kucoin_pumps OR MonacoPumpGroup OR kucoin_pump_group or pmp-tst
+CHANNEL_NAME = 'kucoin_pumps'  # kucoin_pumps OR MonacoPumpGroup OR kucoin_pump_group or pmp-tst
 
 COIN_AMOUNT = '10000000'  # coin amount to buy. Set this a high value to buy all of your current USDT
 COIN_PAIRING = 'USDT'  # type of pairing used for listing. either USDT or BTC

@@ -3,13 +3,12 @@ from art import tprint
 from sty import fg
 
 
-def extract_coin_name(txt, pairing_type):
+def extract_coin_name(txt, pairing_type='USDT'):
     """extract coin name from link.
     finds text between ".com" and "-{pairing_type}"[usually USDT] which is the coin name we are looking for """
-    start = '.com/'
+    start = '/trade'
     end = f'-{pairing_type}'
-
-    return txt.partition(f"{start}")[2].partition(f"{end}")[0]
+    return txt.partition(start)[2].partition(end)[0].partition("/")[2].partition(end)[0]
 
 
 def time_notification(tm):
@@ -22,13 +21,12 @@ def time_notification(tm):
 
 
 def awaiting_message():
-    i = 0
     symb = ['|', '/', '--', '\\']
     while True:
-        print(f'\rAwaiting Coin Message.. {symb[i % len(symb)]}', end=" ")
-        time.sleep(0.5)
-        i += 1
+        for s in symb:
+            print(f'\rAwaiting Coin Message.. {s}', end=" ")
+            time.sleep(0.5)
 
 
-def print_bot_name(bot_name=f"TokenVille Bot"):
+def print_bot_name(bot_name=f"Silonix Trading Bot"):
     tprint(bot_name, font="tarty20")  # tarty3,tarty10, tarty20 chunky,small,ogre

@@ -50,20 +50,18 @@ def keyboard_buy(coin_name, USDT, offset, cur_order_id=0):
     threading.Thread(target=key).start()
 
 
-def limit_buy_token(coin_name, USDT, offset, cur_price=0):
+def limit_buy_token(coin_name, USDT, cur_price):
     """ sets a limit order based on the token name, USDT amount, and offset to the amount. - USED FOR NEW LISTINGS
     This functions is used in the above functions.
      """
-    if not cur_price:
-        cur_price = float(kc_client.get_fiat_prices(symbol=coin_name)[coin_name])  # get fiat or use asks
-    print(f"cur_price = {cur_price}")
-    cur_price += cur_price * (offset / 100)
 
     ord_bk_fa = kc_client.get_order_book(coin_name + '-USDT')['bids'][
         0]  # order book first order used to find decimal count
     num_decimals_price = ord_bk_fa[0][::-1].find('.')
     num_decimals_amount = ord_bk_fa[1][::-1].find('.')
-    print(f"num_decimals_price= {num_decimals_price } -- num_decimals_amount= {num_decimals_amount}")
+    if num_decimals_amount == -1:
+        num_decimals_amount = num_decimals_price
+    print(f"num_decimals_price= {num_decimals_price} -- num_decimals_amount= {num_decimals_amount}")
     cur_price = float(f'%.{num_decimals_price}f' % cur_price)  # note cur_price always has to be float
     buy_amount = f'%.{num_decimals_amount}f' % (
             USDT / cur_price)
@@ -71,4 +69,3 @@ def limit_buy_token(coin_name, USDT, offset, cur_price=0):
                                             size=buy_amount)
     print(f"limit buy order {order_id} placed!")
     return order_id['orderId']
-

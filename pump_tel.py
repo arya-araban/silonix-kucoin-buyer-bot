@@ -8,7 +8,8 @@ from rsrcs.useful_funcs import extract_coin_name, time_notification, print_bot_n
 from rsrcs.coin_lib_pumps import sell_on_target, keyboard_sell, profit_tracker
 
 # ESSENTIAL TUNABLE PARAMETERS!
-CHANNEL_NAME = 'pmptst'  # kucoin_pumps OR MonacoPumpGroup OR kucoin_pump_group
+CHANNEL_NAME = 'kucoinpumpswsb'  # kucoin_pumps OR MonacoPumpGroup OR kucoin_pump_group OR WSB_CryptoPumpSignal
+# OR kucoinpumpswsb
 
 COIN_AMOUNT = '10000000'  # coin amount to buy. Set this a high value to buy all of your current USDT
 COIN_PAIRING = 'USDT'  # type of pairing used for listing. either USDT or BTC
@@ -24,13 +25,14 @@ def tel_main(sell_target=False):
     @tel_client.on(events.NewMessage(chats=CHANNEL_NAME))
     async def my_event_handler(event):
         c_name = extract_coin_name(event.raw_text, pairing_type=COIN_PAIRING)
+        print('message')
         if not c_name:
             return
 
         proc.terminate()
         print(f'\r ')
 
-        print(event.raw_text)
+        print(c_name)
 
         order = kc_client.create_market_order(c_name + f'-{COIN_PAIRING}', Client.SIDE_BUY, size=COIN_AMOUNT)
         entry_price = kc_client.get_fiat_prices(symbol=c_name)[c_name]  # or take from bid?
