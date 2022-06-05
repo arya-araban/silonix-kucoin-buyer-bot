@@ -15,3 +15,8 @@ api_passphrase = 'Your Kucoin API passphrase'
 
 # KuCoin Client creation 
 kc_client = Client(api_key, api_secret, api_passphrase)
+
+# DISCORD HEADERS FOR SCRAPING
+discord_headers = {
+    'authorization': 'Your Discord authorization key'
+}
