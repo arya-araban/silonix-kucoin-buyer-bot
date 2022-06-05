@@ -1,4 +1,4 @@
-# kucoin-buyer
+# Silonix trading bot 
 
 Trading bot which allows buying newly listed Tokens on Kucoin as soon as they are released, as well as buying tokens as soon as they have been announced to pump (by scraping a Telegram OR Discord pump channel's announcment)
 
@@ -10,7 +10,8 @@ example message: " The token to pump is BTC - https://trade.kucoin.com/BTC-USDT 
 - In order to place sell orders instantaneously after buy order fulfilled, press pg-up to place limit sell order on highest bid order, or pg-down to place market sell order. Note that Market selling guarantees your sell order will go through 
 
 ## ⚠️ Disclaimer 
-Even though this bot generally has a high success rate, it does not guarantee profit, so risk only what you can afford to lose.<br/> I will not be held responsible for any losses you make.
+Even though this bot generally has a high success rate, it does not guarantee profit, so risk only what you can afford to lose. 
+I will not be held responsible for any losses you make.
 ## 💖 Made profit? Show support! 
 During the development of this project I envisioned that I would monotize it, However, due to my love for open-source, I've decided to share this application free of charge.  If it has been useful to you, it would go a great way to show your support.
 
