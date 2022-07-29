@@ -8,7 +8,7 @@ from rsrcs.useful_funcs import extract_coin_name, time_notification, print_bot_n
 from rsrcs.coin_lib_pumps import sell_on_target, keyboard_sell, profit_tracker
 
 # ESSENTIAL TUNABLE PARAMETERS!
-CHANNEL_NAME = 'kucoinpumpswsb'  # kucoin_pumps OR MonacoPumpGroup OR kucoin_pump_group OR WSB_CryptoPumpSignal
+CHANNEL_NAME = "kucoinpumpswsb"  # kucoin_pumps OR MonacoPumpGroup OR kucoin_pump_group OR WSB_CryptoPumpSignal
 # OR kucoinpumpswsb
 
 COIN_AMOUNT = '10000000'  # coin amount to buy. Set this a high value to buy all of your current USDT

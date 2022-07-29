@@ -7,12 +7,12 @@ from rsrcs.coin_lib_listings import limit_buy_token, keyboard_buy
 from rsrcs.coin_lib_pumps import keyboard_sell, profit_tracker
 from rsrcs.useful_funcs import print_bot_name, awaiting_message
 
-COIN_NAME = 'SCRT'
-DELAY = 0.01  # delay(in seconds) to get coin price again as soon as listing. 0 means no update
+COIN_NAME = 'OLE'
+DELAY = 0.001  # delay(in seconds) to get coin price again as soon as listing. 0 means no update
 
-USDT_AMOUNT = 3
+USDT_AMOUNT = 5
 
-OFFSET = 0.5  # percentage added to OG order price. ie: if price 100 retrieved and offset is 1, order price will be 101
+OFFSET = 11  # percentage added to OG order price. ie: if price 100 retrieved and offset is 1, order price will be 101
 
 
 # good numbers for offset: around 5 to 30 percent for world premiers, and 1 to 5 for normal new listings.

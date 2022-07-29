@@ -28,7 +28,7 @@ def extract_discord_coin_name(channel_id, headers):
         try:
             last_msg = json.loads(future.result().text)[0]['content']
             c_name = extract_coin_name(last_msg, "USDT")
-            # print(last_msg)
+            #print(last_msg)
             if c_name:  # if c_name isn't ''
                 # print(c_name)
                 return c_name

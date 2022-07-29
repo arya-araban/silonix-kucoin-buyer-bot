@@ -20,12 +20,13 @@ COIN_PAIRING = 'USDT'  # type of pairing used for listing. either USDT or BTC
 
 # NON-ESSENTIAL
 TARGET_SELL_PERCENTAGE = 100
+DELAY = None  # a slight delay like 0.1 might be good so the bot doesn't buy on spike
 
 discord_channel_ids = {
     'kucoin_pumps': 957295933446565978,
     "MonacoPumpGroup": 884033922873323540,
     "kucoin_pump_group": 840108367594782760,
-    "pmp-tst": 895686940563738685
+    "pmp_tst": 895686940563738685
 }
 
 
@@ -39,8 +40,10 @@ def discord_main(sell_target=False):
     print(f'\r ')
 
     print(c_name)
-    # print(int(time.time()*1000))
-    # time.sleep(0.5) #delay for pump order
+
+    # if DELAY is not None:
+    #     time.sleep(DELAY)
+
     order = kc_client.create_market_order(c_name + f'-{COIN_PAIRING}', Client.SIDE_BUY, size=COIN_AMOUNT)
     # print(int(time.time() * 1000))
     entry_price = kc_client.get_fiat_prices(symbol=c_name)[c_name]  # or take from bid?
