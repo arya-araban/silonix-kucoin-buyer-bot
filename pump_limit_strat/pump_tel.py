@@ -4,8 +4,8 @@ from threading import Thread
 from config import kc_client, tel_client
 from kucoin.client import Client
 from telethon import events
-from rsrcs.useful_funcs import extract_coin_name, time_notification, print_bot_name, awaiting_message
-from rsrcs.coin_lib_pumps import sell_on_target, keyboard_sell, profit_tracker
+from rsrcs.useful_funcs import extract_coin_name, print_bot_name, awaiting_message
+from rsrcs.coin_lib_general import sell_on_target, keyboard_sell, profit_tracker
 
 # ESSENTIAL TUNABLE PARAMETERS!
 CHANNEL_NAME = "kucoinpumpswsb"  # kucoin_pumps OR MonacoPumpGroup OR kucoin_pump_group OR WSB_CryptoPumpSignal

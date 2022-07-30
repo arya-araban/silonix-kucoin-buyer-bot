@@ -2,9 +2,11 @@ import multiprocessing
 import time
 from threading import Thread
 
+import requests
+
 from config import kc_client
 from rsrcs.coin_lib_listings import limit_buy_token, keyboard_buy
-from rsrcs.coin_lib_pumps import keyboard_sell, profit_tracker
+from rsrcs.coin_lib_general import keyboard_sell, profit_tracker
 from rsrcs.useful_funcs import print_bot_name, awaiting_message
 
 COIN_NAME = 'OLE'
@@ -32,6 +34,8 @@ def main():
     print(f'\r ')
 
     cur_price = float(coin[COIN_NAME])
+    coin_details = requests.request('GET', 'https://api.kucoin.com' + f'/api/v1/symbols/{COIN_NAME}-USDT').json()[
+        'data']
 
     if DELAY != 0:
         time.sleep(DELAY)
@@ -41,11 +45,11 @@ def main():
     cur_price += cur_price * (OFFSET / 100)
     # print(f"offset_price = {cur_price}")
 
-    order_id = limit_buy_token(COIN_NAME, USDT_AMOUNT, cur_price)
+    order_id = limit_buy_token(COIN_NAME, coin_details, USDT_AMOUNT, cur_price)
 
     Thread(target=profit_tracker, args=[COIN_NAME, float(cur_price)]).start()
 
-    keyboard_sell(COIN_NAME, order_id, 'USDT')  # page-up -- limit sell, page-down -- market sell
+    keyboard_sell(COIN_NAME, coin_details, order_id, 'USDT')  # page-up -- limit sell, page-down -- market sell
 
     '''
     Uncomment the following line to enable keyboard buying, this will only be used for cases where limit order hasn't 

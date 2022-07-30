@@ -1,23 +1,23 @@
+import math
 import time
+from decimal import Decimal
+
 from art import tprint
 from sty import fg
 
 
 def extract_coin_name(txt, pairing_type='USDT'):
-    """extract coin name from link.
+    """extract coin name from KuCoin trading link using partitioning.
     finds text between ".com" and "-{pairing_type}"[usually USDT] which is the coin name we are looking for """
     start = '/trade'
     end = f'-{pairing_type}'
     return txt.partition(start)[2].partition(end)[0].partition("/")[2].partition(end)[0]
 
 
-def time_notification(tm):
-    """print a notification of elapsed time. run this in a thread for it to be non blocking."""
-    i = 0
-    while True:
-        print(f'\r {fg.cyan + str(tm * i) + fg.rs} seconds have passed since order!', end=" ")
-        time.sleep(tm)
-        i += 1
+def round_down(num: float, to: float) -> float:
+    """ round down 'num' to be a multiple of 'to' """
+    num, to = Decimal(str(num)), Decimal(str(to))
+    return float(math.floor(num / to) * to)
 
 
 def awaiting_message():

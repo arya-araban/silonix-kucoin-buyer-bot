@@ -4,23 +4,31 @@ import threading
 import time
 from threading import Thread
 
+import requests
 from reprint import output
 
 import config
 from config import kc_client, tel_client
 from kucoin.client import Client
-from rsrcs.useful_funcs import extract_coin_name, time_notification, print_bot_name, awaiting_message
-from rsrcs.coin_lib_pumps import sell_on_target, keyboard_sell, extract_discord_coin_name, profit_tracker
+
+from rsrcs.coin_lib_listings import limit_buy_token
+from rsrcs.useful_funcs import extract_coin_name, print_bot_name, awaiting_message
+
+from rsrcs.coin_lib_pumps import extract_discord_coin_name
+from rsrcs.coin_lib_general import sell_on_target, keyboard_sell, profit_tracker
 
 # ESSENTIAL TUNABLE PARAMETERS!
-CHANNEL_NAME = 'kucoin_pumps'  # kucoin_pumps OR MonacoPumpGroup OR kucoin_pump_group or pmp-tst
+CHANNEL_NAME = 'pmp_tst'  # kucoin_pumps OR MonacoPumpGroup OR kucoin_pump_group or pmp-tst
 
-COIN_AMOUNT = '10000000'  # coin amount to buy. Set this a high value to buy all of your current USDT
-COIN_PAIRING = 'USDT'  # type of pairing used for listing. either USDT or BTC
+USDT_AMOUNT = 2  # amount of USDT to put in pump. make sure you have enough USDT in your balance!
+ORDER_ON_MULTIPLY_OF_OP = 1  # set limit order on what multiply of the original price (price before pump)
+# keep this between 1.5 and 3 depending on group. good defaults: YOBI: 3x, JACK: 2x, MONACO: 2x
+
+
+MINUTES_BEFORE_ANNOUNCEMENT = 1.1  # run this script x minutes before announcement
 
 # NON-ESSENTIAL
-TARGET_SELL_PERCENTAGE = 100
-DELAY = None  # a slight delay like 0.1 might be good so the bot doesn't buy on spike
+TARGET_SELL_PERCENTAGE = 0
 
 discord_channel_ids = {
     'kucoin_pumps': 957295933446565978,
@@ -30,7 +38,10 @@ discord_channel_ids = {
 }
 
 
-def discord_main(sell_target=False):
+def discord_main():
+    coin_prices = kc_client.get_fiat_prices()  # a dict containing the prices of all coins
+    print(f"Gathered prices! awaiting {(MINUTES_BEFORE_ANNOUNCEMENT - 1)} minutes before launching message scraper...")
+    time.sleep((MINUTES_BEFORE_ANNOUNCEMENT - 1) * 60)
     proc = multiprocessing.Process(target=awaiting_message)
     proc.start()
 
@@ -39,35 +50,32 @@ def discord_main(sell_target=False):
     proc.terminate()
     print(f'\r ')
 
-    print(c_name)
+    order_price = coin_prices[c_name] * ORDER_ON_MULTIPLY_OF_OP
+    coin_details = requests.request('GET', 'https://api.kucoin.com' + f'/api/v1/symbols/{c_name}-USDT').json()[
+        'data']
 
-    # if DELAY is not None:
-    #     time.sleep(DELAY)
+    order_id = limit_buy_token(c_name, coin_details, USDT_AMOUNT, order_price)  # place limit order to buy token
 
-    order = kc_client.create_market_order(c_name + f'-{COIN_PAIRING}', Client.SIDE_BUY, size=COIN_AMOUNT)
-    # print(int(time.time() * 1000))
-    entry_price = kc_client.get_fiat_prices(symbol=c_name)[c_name]  # or take from bid?
-
-    print(f"{order} --- {entry_price}")
+    print(f"{order_id} --- {order_price}")
 
     # Thread(target=time_notification, args=[1]).start()  # starting a thread which prints time elapsed every n secs
-    Thread(target=profit_tracker, args=[c_name, float(entry_price)]).start()
+    Thread(target=profit_tracker, args=[c_name, float(order_price)]).start()
 
-    keyboard_sell(coin_name=c_name,
-                  order_id=order['orderId'],
-                  pairing_type=COIN_PAIRING)  # enable keypress sell option. "pg up" for limit and "pg down" for market
+    keyboard_sell(coin_name=c_name, coin_details=coin_details,
+                  order_id=order_id,
+                  pairing_type='USDT')  # enable keypress sell option. "pg up" for limit and "pg down" for market
 
-    if sell_target:
-        ord_bk_fa = kc_client.get_order_book(c_name + f'-{COIN_PAIRING}')['bids'][0]  # order book first order
-        num_decimals_price = ord_bk_fa[0][::-1].find('.')
-        num_decimals_amount = ord_bk_fa[1][::-1].find('.')
-        deal_amount = f'%.{num_decimals_amount}f' % (float(kc_client.get_order(order['orderId'])['dealSize']) * 0.998)
-        target_price = f'%.{num_decimals_price}f' % (float(entry_price) * ((TARGET_SELL_PERCENTAGE / 100) + 1))
-        # the '%.2f' % is to limit decimals!
-        sell_on_target(coin_name=c_name, target_price=target_price, coin_amount=deal_amount, time_to_check=0.8,
-                       pairing_type=COIN_PAIRING)
+    # if TARGET_SELL_PERCENTAGE:  # if you set target sell percentage
+    #     ord_bk_fa = kc_client.get_order_book(c_name + f'-{COIN_PAIRING}')['bids'][0]  # order book first order
+    #     num_decimals_price = ord_bk_fa[0][::-1].find('.')
+    #     num_decimals_amount = ord_bk_fa[1][::-1].find('.')
+    #     deal_amount = f'%.{num_decimals_amount}f' % (float(kc_client.get_order(order['orderId'])['dealSize']) * 0.998)
+    #     target_price = f'%.{num_decimals_price}f' % (float(entry_price) * ((TARGET_SELL_PERCENTAGE / 100) + 1))
+    #     # the '%.2f' % is to limit decimals!
+    #     sell_on_target(coin_name=c_name, target_price=target_price, coin_amount=deal_amount, time_to_check=0.8,
+    #                    pairing_type=COIN_PAIRING)
 
 
 if __name__ == "__main__":
     print_bot_name()
-    discord_main(sell_target=False)
+    discord_main()

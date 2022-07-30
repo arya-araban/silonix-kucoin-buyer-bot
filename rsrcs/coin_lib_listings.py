@@ -1,30 +1,14 @@
 import threading
 import time
+
+import requests
+
 from config import kc_client
 from kucoin.client import Client
 from pynput.keyboard import Listener, KeyCode
 
-from rsrcs.coin_lib_pumps import keyboard_sell
-
-
-def buy_on_time(coin_name, USDT, offset, desired_time_utc):
-    """ This function buys new listing on specified time - USED FOR NEW LISTINGS
-
-        "USDT" is the amount of USDT to buy of the token. make sure you have enough USDT in balance
-        "offset" is the upper bound percentage difference to place limit on
-        "desired_time_utc"  is the time of the new listing, having on offset of 1 second late might be better.
-
-         IE: fiat price is 100 and offset is 5%,  then order will be placed on 105, be careful when setting offset """
-    my_timer = threading.Timer(1, buy_on_time, args=[coin_name, USDT, offset, desired_time_utc])
-    my_timer.start()
-
-    now_gmt = time.strftime("%H:%M:%S", time.gmtime())
-    print(now_gmt)
-    if now_gmt == desired_time_utc:
-        print('\n time buying new listing!')
-        limit_buy_token(coin_name, USDT, offset)
-        my_timer.cancel()
-        # the order has happened on time, now stop this thread.
+from rsrcs.coin_lib_general import limit_buy_token
+from rsrcs.useful_funcs import round_down
 
 
 def keyboard_buy(coin_name, USDT, offset, cur_order_id=0):
@@ -50,22 +34,21 @@ def keyboard_buy(coin_name, USDT, offset, cur_order_id=0):
     threading.Thread(target=key).start()
 
 
-def limit_buy_token(coin_name, USDT, cur_price):
-    """ sets a limit order based on the token name, USDT amount, and offset to the amount. - USED FOR NEW LISTINGS
-    This functions is used in the above functions.
-     """
+def _buy_on_time(coin_name, USDT, offset, desired_time_utc):
+    """ DEPRECATED This function buys new listing on specified time - USED FOR NEW LISTINGS
 
-    ord_bk_fa = kc_client.get_order_book(coin_name + '-USDT')['bids'][
-        0]  # order book first order used to find decimal count
-    num_decimals_price = ord_bk_fa[0][::-1].find('.')
-    num_decimals_amount = ord_bk_fa[1][::-1].find('.')
-    if num_decimals_amount == -1:
-        num_decimals_amount = num_decimals_price
-    print(f"num_decimals_price= {num_decimals_price} -- num_decimals_amount= {num_decimals_amount}")
-    cur_price = float(f'%.{num_decimals_price}f' % cur_price)  # note cur_price always has to be float
-    buy_amount = f'%.{num_decimals_amount}f' % (
-            USDT / cur_price)
-    order_id = kc_client.create_limit_order(coin_name + "-USDT", Client.SIDE_BUY, price=cur_price,
-                                            size=buy_amount)
-    print(f"limit buy order {order_id} placed!")
-    return order_id['orderId']
+        "USDT" is the amount of USDT to buy of the token. make sure you have enough USDT in balance
+        "offset" is the upper bound percentage difference to place limit on
+        "desired_time_utc"  is the time of the new listing, having on offset of 1 second late might be better.
+
+         IE: fiat price is 100 and offset is 5%,  then order will be placed on 105, be careful when setting offset """
+    my_timer = threading.Timer(1, _buy_on_time, args=[coin_name, USDT, offset, desired_time_utc])
+    my_timer.start()
+
+    now_gmt = time.strftime("%H:%M:%S", time.gmtime())
+    print(now_gmt)
+    if now_gmt == desired_time_utc:
+        print('\n time buying new listing!')
+        limit_buy_token(coin_name, USDT, offset)
+        my_timer.cancel()
+        # the order has happened on time, now stop this thread.
