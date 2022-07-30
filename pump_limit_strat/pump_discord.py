@@ -1,21 +1,12 @@
 """ PUMP USING THE DISCORD API """
 import multiprocessing
-import threading
 import time
 from threading import Thread
-
 import requests
-from reprint import output
-
 import config
-from config import kc_client, tel_client
-from kucoin.client import Client
-
-from rsrcs.coin_lib_listings import limit_buy_token
-from rsrcs.useful_funcs import extract_coin_name, print_bot_name, awaiting_message
-
-from rsrcs.coin_lib_pumps import extract_discord_coin_name
-from rsrcs.coin_lib_general import sell_on_target, keyboard_sell, profit_tracker
+from config import kc_client
+from rsrcs.coin_lib import limit_buy_token, extract_discord_coin_name, keyboard_sell, profit_tracker
+from rsrcs.useful_funcs import print_bot_name, awaiting_message
 
 # ESSENTIAL TUNABLE PARAMETERS!
 CHANNEL_NAME = 'pmp_tst'  # kucoin_pumps OR MonacoPumpGroup OR kucoin_pump_group or pmp-tst
