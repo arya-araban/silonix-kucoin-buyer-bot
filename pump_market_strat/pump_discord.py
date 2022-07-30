@@ -27,7 +27,7 @@ discord_channel_ids = {
 }
 
 
-def discord_main(sell_target=False):
+def discord_main():
     proc = multiprocessing.Process(target=awaiting_message)
     proc.start()
 
@@ -57,7 +57,7 @@ def discord_main(sell_target=False):
                   order_id=order['orderId'],
                   pairing_type=COIN_PAIRING)  # enable keypress sell option. "pg up" for limit and "pg down" for market
 
-    # if sell_target:
+    # if TARGET_SELL_PERCENTAGE:
     #     ord_bk_fa = kc_client.get_order_book(c_name + f'-{COIN_PAIRING}')['bids'][0]  # order book first order
     #     num_decimals_price = ord_bk_fa[0][::-1].find('.')
     #     num_decimals_amount = ord_bk_fa[1][::-1].find('.')
@@ -70,4 +70,4 @@ def discord_main(sell_target=False):
 
 if __name__ == "__main__":
     print_bot_name()
-    discord_main(sell_target=False)
+    discord_main()
