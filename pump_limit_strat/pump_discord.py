@@ -9,14 +9,14 @@ from rsrcs.coin_lib import limit_buy_token, extract_discord_coin_name, keyboard_
 from rsrcs.useful_funcs import print_bot_name, awaiting_message, round_down
 
 # ESSENTIAL TUNABLE PARAMETERS!
-CHANNEL_NAME = 'pmp_tst'  # kucoin_pumps OR MonacoPumpGroup OR kucoin_pump_group or pmp-tst
+CHANNEL_NAME = 'kucoin_pump_group'  # kucoin_pumps OR MonacoPumpGroup OR kucoin_pump_group or pmp-tst
 
-USDT_AMOUNT = 1  # amount of USDT to put in pump. make sure you have enough USDT in your balance!
-ORDER_ON_MULTIPLY_OF_OP = 1.005  # set limit order on what multiply of the original price (price before pump)
+USDT_AMOUNT = 50  # amount of USDT to put in pump. make sure you have enough USDT in your balance!
+ORDER_ON_MULTIPLY_OF_OP = 2  # set entry limit buy order on what multiply of the original price (price before pump)
 # keep this between 1.5 and 3 depending on group. good defaults: YOBI: 2.5x, JACK: 2x, MONACO: 2x
 # IMPORTANT: if your entry is 2x, in order to double $$ you expect 300% rise from initial price (if entry 3x, then %600)
 
-MINUTES_BEFORE_ANNOUNCEMENT = 1.1  # run this script x minutes before announcement
+MINUTES_BEFORE_ANNOUNCEMENT = 2  # run this script x minutes before announcement
 
 # NON-ESSENTIAL
 TARGET_SELL_MULTIPLIER = 2  # after reaching what multiple of your entry price should sell order be placed (0 for not activating)
