@@ -13,14 +13,11 @@ from pynput.keyboard import Listener
 """ GENERAL FUNCTIONS HERE (USED FOR BOTH LISTINGS & PUMPS)"""
 
 
-def keyboard_sell(coin_name, coin_details, order_id, pairing_type):
+def keyboard_sell(coin_name, deal_amount, pairing_type):
     """This function sells with keyboard presses -  USED FOR PUMPS & NEW LISTINGS!!
     press 'pg up' to sell on limit
     press 'pg down' to sell on market (which will be the highest buy ask for the coin)
     usually the optimal time to sell is twenty seconds after a pump, or around one minute after new listing """
-
-    deal_amount = round_down(float(kc_client.get_order(order_id)['dealSize']) * 0.998, coin_details['baseIncrement'])
-    print(deal_amount)
 
     def sell_keypress(*key):
         try:
@@ -62,7 +59,7 @@ def limit_buy_token(coin_name, coin_details, USDT_AMOUNT, cur_price):
     return order_id['orderId']
 
 
-def sell_on_target(coin_name, coin_details, target_price, coin_amount, pairing_type, refresh_rate=0.3):
+def sell_on_target(coin_name, deal_amount, target_price, pairing_type, refresh_rate=0.3):
     """
 
     this function places a limit order on the current price of the token being pumped as soon as it reaches the target
@@ -73,14 +70,15 @@ def sell_on_target(coin_name, coin_details, target_price, coin_amount, pairing_t
     profit
     time_to_check is in second.  it will check for target each n seconds. a good default value is 0.8
     """
-
     while True:
 
-        cur_price = kc_client.get_order_book(coin_name + f'-{pairing_type}')['asks'][0][0]
-        if target_price < cur_price:
+        cur_price = float(kc_client.get_fiat_prices(symbol=coin_name)[coin_name])
+        if target_price <= cur_price:
             order = kc_client.create_limit_order(coin_name + f'-{pairing_type}', Client.SIDE_SELL, price=target_price,
-                                                 size=coin_amount)
+                                                 size=deal_amount)
             print(f"{order} happened! selling on target price {str(target_price)}")
+            break
+        time.sleep(refresh_rate)
 
 
 def profit_tracker(coin_name, entry_price, refresh_rate=0.3):

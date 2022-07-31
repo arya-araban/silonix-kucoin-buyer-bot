@@ -5,21 +5,21 @@ from threading import Thread
 import requests
 import config
 from config import kc_client
-from rsrcs.coin_lib import limit_buy_token, extract_discord_coin_name, keyboard_sell, profit_tracker
-from rsrcs.useful_funcs import print_bot_name, awaiting_message
+from rsrcs.coin_lib import limit_buy_token, extract_discord_coin_name, keyboard_sell, profit_tracker, sell_on_target
+from rsrcs.useful_funcs import print_bot_name, awaiting_message, round_down
 
 # ESSENTIAL TUNABLE PARAMETERS!
 CHANNEL_NAME = 'pmp_tst'  # kucoin_pumps OR MonacoPumpGroup OR kucoin_pump_group or pmp-tst
 
-USDT_AMOUNT = 2  # amount of USDT to put in pump. make sure you have enough USDT in your balance!
-ORDER_ON_MULTIPLY_OF_OP = 1  # set limit order on what multiply of the original price (price before pump)
-# keep this between 1.5 and 3 depending on group. good defaults: YOBI: 3x, JACK: 2x, MONACO: 2x
-
+USDT_AMOUNT = 1  # amount of USDT to put in pump. make sure you have enough USDT in your balance!
+ORDER_ON_MULTIPLY_OF_OP = 1.005  # set limit order on what multiply of the original price (price before pump)
+# keep this between 1.5 and 3 depending on group. good defaults: YOBI: 2.5x, JACK: 2x, MONACO: 2x
+# IMPORTANT: if your entry is 2x, in order to double $$ you expect 300% rise from initial price (if entry 3x, then %600)
 
 MINUTES_BEFORE_ANNOUNCEMENT = 1.1  # run this script x minutes before announcement
 
 # NON-ESSENTIAL
-TARGET_SELL_PERCENTAGE = 0
+TARGET_SELL_MULTIPLIER = 2  # after reaching what multiple of your entry price should sell order be placed (0 for not activating)
 
 discord_channel_ids = {
     'kucoin_pumps': 957295933446565978,
@@ -41,7 +41,9 @@ def discord_main():
     proc.terminate()
     print(f'\r ')
 
-    order_price = coin_prices[c_name] * ORDER_ON_MULTIPLY_OF_OP
+    print(c_name)
+
+    order_price = float(coin_prices[c_name]) * ORDER_ON_MULTIPLY_OF_OP
     coin_details = requests.request('GET', 'https://api.kucoin.com' + f'/api/v1/symbols/{c_name}-USDT').json()[
         'data']
 
@@ -49,22 +51,15 @@ def discord_main():
 
     print(f"{order_id} --- {order_price}")
 
-    # Thread(target=time_notification, args=[1]).start()  # starting a thread which prints time elapsed every n secs
     Thread(target=profit_tracker, args=[c_name, float(order_price)]).start()
 
-    keyboard_sell(coin_name=c_name, coin_details=coin_details,
-                  order_id=order_id,
+    deal_amount = round_down(float(kc_client.get_order(order_id)['dealSize']) * 0.998, coin_details['baseIncrement'])
+    keyboard_sell(coin_name=c_name, deal_amount=deal_amount,
                   pairing_type='USDT')  # enable keypress sell option. "pg up" for limit and "pg down" for market
 
-    # if TARGET_SELL_PERCENTAGE:  # if you set target sell percentage
-    #     ord_bk_fa = kc_client.get_order_book(c_name + f'-{COIN_PAIRING}')['bids'][0]  # order book first order
-    #     num_decimals_price = ord_bk_fa[0][::-1].find('.')
-    #     num_decimals_amount = ord_bk_fa[1][::-1].find('.')
-    #     deal_amount = f'%.{num_decimals_amount}f' % (float(kc_client.get_order(order['orderId'])['dealSize']) * 0.998)
-    #     target_price = f'%.{num_decimals_price}f' % (float(entry_price) * ((TARGET_SELL_PERCENTAGE / 100) + 1))
-    #     # the '%.2f' % is to limit decimals!
-    #     sell_on_target(coin_name=c_name, target_price=target_price, coin_amount=deal_amount, time_to_check=0.8,
-    #                    pairing_type=COIN_PAIRING)
+    if TARGET_SELL_MULTIPLIER:  # if you set target sell percentage
+        target_price = round_down(order_price * TARGET_SELL_MULTIPLIER, coin_details['priceIncrement'])
+        Thread(target=sell_on_target, args=[c_name, deal_amount, float(target_price), "USDT"]).start()
 
 
 if __name__ == "__main__":
