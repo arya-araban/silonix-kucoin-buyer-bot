@@ -11,10 +11,11 @@ from rsrcs.useful_funcs import print_bot_name, awaiting_message, round_down
 # ESSENTIAL TUNABLE PARAMETERS!
 CHANNEL_NAME = 'kucoin_pump_group'  # kucoin_pumps OR MonacoPumpGroup OR kucoin_pump_group or pmp-tst
 
-USDT_AMOUNT = 50  # amount of USDT to put in pump. make sure you have enough USDT in your balance!
+USDT_AMOUNT = 75  # amount of USDT to put in pump. make sure you have enough USDT in your balance!
 ORDER_ON_MULTIPLY_OF_OP = 2  # set entry limit buy order on what multiply of the original price (price before pump)
-# keep this between 1.5 and 3 depending on group. good defaults: YOBI: 2.5x, JACK: 2x, MONACO: 2x
-# IMPORTANT: if your entry is 2x, in order to double $$ you expect 300% rise from initial price (if entry 3x, then %600)
+# keep this between 1.5 and 3 depending on group. good defaults: YOBI: 2.5x, JACK: 1.65x, MONACO: 1.5x
+# IMPORTANT: if your entry is 2x, in order to double $$ you expect 4x(300%) rise from initial price
+# (if entry 3x, then 6x(%500))
 
 MINUTES_BEFORE_ANNOUNCEMENT = 2  # run this script x minutes before announcement
 

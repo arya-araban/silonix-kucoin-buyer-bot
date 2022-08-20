@@ -41,7 +41,8 @@ def discord_main():
     # if DELAY is not None:
     #     time.sleep(DELAY)
 
-    order = kc_client.create_market_order(c_name + f'-{COIN_PAIRING}', Client.SIDE_BUY, size=COIN_AMOUNT)
+    order = kc_client.create_market_order(c_name + f'-{COIN_PAIRING}', Client.SIDE_BUY,
+                                          size=COIN_AMOUNT)  # TODO: size to funds
     # print(int(time.time() * 1000))
 
     entry_price = kc_client.get_fiat_prices(symbol=c_name)[c_name]  # or take from bid?
@@ -63,6 +64,7 @@ def discord_main():
     if TARGET_SELL_MULTIPLIER:  # if you set target sell percentage
         target_price = round_down(entry_price * TARGET_SELL_MULTIPLIER, coin_details['priceIncrement'])
         Thread(target=sell_on_target, args=[c_name, deal_amount, float(target_price), "USDT"]).start()
+
 
 if __name__ == "__main__":
     print_bot_name()

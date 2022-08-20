@@ -76,7 +76,7 @@ def sell_on_target(coin_name, deal_amount, target_price, pairing_type, refresh_r
         if target_price <= cur_price:
             order = kc_client.create_limit_order(coin_name + f'-{pairing_type}', Client.SIDE_SELL, price=target_price,
                                                  size=deal_amount)
-            print(f"{order} happened! selling on target price {str(target_price)}")
+            print(f"target price reached! placing limit order at price {str(target_price)}")
             break
         time.sleep(refresh_rate)
 
