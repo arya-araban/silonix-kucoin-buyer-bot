@@ -10,23 +10,24 @@ from config import kc_client, tel_client
 from kucoin.client import Client
 from telethon import events
 from rsrcs.useful_funcs import extract_coin_name, print_bot_name, awaiting_message, round_down
-from rsrcs.coin_lib import sell_on_target, keyboard_sell, profit_tracker, limit_buy_token
+from rsrcs.coin_lib import sell_on_target, keyboard_sell, profit_tracker, limit_buy_token, cancel_order_sm
 
 # ESSENTIAL TUNABLE PARAMETERS!
-CHANNEL_NAME = "pmptst"  # kucoin_pumps OR MonacoPumpGroup OR kucoin_pump_group OR WSB_CryptoPumpSignal
+CHANNEL_NAME = "CryptoVIPsignalTA"  # kucoin_pumps OR MonacoPumpGroup OR kucoin_pump_group OR WSB_CryptoPumpSignal
 # OR kucoinpumpswsb OR CryptoVIPsignalTA
 
-USDT_AMOUNT = 75  # amount of USDT to put in pump. make sure you have enough USDT in your balance!
-ORDER_ON_MULTIPLY_OF_OP = 2  # set entry limit buy order on what multiply of the original price (price before pump)
+USDT_AMOUNT = 1  # amount of USDT to put in pump. make sure you have enough USDT in your balance!
+ORDER_ON_MULTIPLY_OF_OP = 2.4  # set entry limit buy order on what multiply of the original price (price before pump)
 # keep this between 1.5 and 3 depending on group. good defaults: YOBI: 2.5x, JACK: 1.65x, MONACO: 1.5x,
-# CryptoVIPsignalTA: 1.5x
+# CryptoVIPsignalTA: 2x
 # IMPORTANT: if your entry is 2x, in order to double $$ you expect 4x(300%) rise from initial price
-# (if entry 1.5x, then 3x(%200)) ~~ (if entry 3x, then 6x(%500))
+# (if entry 1.5x, then 3x(%200)) ~~  (if entry 2.5x, then 5x(%400)) ~~ (if entry 3x, then 6x(%500))
 
 
-MINUTES_BEFORE_ANNOUNCEMENT = 1  # run this script x minutes before announcement
+MINUTES_BEFORE_ANNOUNCEMENT = 2  # run this script x minutes before announcement. note scraper starts 1 minute after this
+# Usually 2 mins is good
 # NON-ESSENTIAL
-TARGET_SELL_MULTIPLIER = 2
+TARGET_SELL_MULTIPLIER = 3
 
 
 def tel_main(sell_target=False):
@@ -57,6 +58,7 @@ def tel_main(sell_target=False):
 
         print(f"{order_id} --- {order_price}")
 
+        Thread(target=cancel_order_sm, args=[order_id]).start()
         Thread(target=profit_tracker, args=[c_name, float(order_price)]).start()
 
         deal_amount = round_down(float(kc_client.get_order(order_id)['dealSize']) * 0.998,

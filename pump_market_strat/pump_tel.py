@@ -11,8 +11,8 @@ from rsrcs.useful_funcs import extract_coin_name, print_bot_name, awaiting_messa
 from rsrcs.coin_lib import sell_on_target, keyboard_sell, profit_tracker
 
 # ESSENTIAL TUNABLE PARAMETERS!
-CHANNEL_NAME = "Kucoin_Exchange"  # kucoin_pumps OR MonacoPumpGroup OR kucoin_pump_group OR WSB_CryptoPumpSignal
-# OR kucoinpumpswsb
+CHANNEL_NAME = "pmptst"  # kucoin_pumps OR MonacoPumpGroup OR kucoin_pump_group OR WSB_CryptoPumpSignal
+# OR kucoinpumpswsb OR CryptoVIPsignalTA
 
 COIN_AMOUNT = '10000000'  # coin amount to buy. Set this a high value to buy all of your current USDT
 COIN_PAIRING = 'USDT'  # type of pairing used for listing. either USDT or BTC
@@ -23,18 +23,18 @@ DELAY = None  # a slight delay like 0.1 might be good so the bot doesn't buy on 
 
 
 def tel_main(sell_target=False):
-    # proc = multiprocessing.Process(target=awaiting_message)
-    # proc.start()
+    proc = multiprocessing.Process(target=awaiting_message)
+    proc.start()
 
     @tel_client.on_message(filters.chat(CHANNEL_NAME))
     def from_pyrogramchat(client, message):
         c_name = extract_coin_name(message.text, pairing_type=COIN_PAIRING)
-        print('message')
+        # print('message')
         if not c_name:
             return
 
-        # proc.terminate()
-        # print(f'\r ')
+        proc.terminate()
+        print(f'\r ')
 
         print(c_name)
 
@@ -54,7 +54,7 @@ def tel_main(sell_target=False):
                       pairing_type=COIN_PAIRING)  # enable keypress sell option. "pg up" for limit and "pg down" for market
 
         if TARGET_SELL_MULTIPLIER:  # if you set target sell percentage
-            target_price = round_down(entry_price * TARGET_SELL_MULTIPLIER, coin_details['priceIncrement'])
+            target_price = round_down(float(entry_price) * TARGET_SELL_MULTIPLIER, coin_details['priceIncrement'])
             Thread(target=sell_on_target, args=[c_name, deal_amount, float(target_price), "USDT"]).start()
 
     tel_client.run()

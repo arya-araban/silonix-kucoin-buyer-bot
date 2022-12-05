@@ -119,6 +119,24 @@ def extract_discord_coin_name(channel_id, headers):
             continue
 
 
+def cancel_order_sm(order_id, seconds=7):
+    """
+
+       this function is a safety measure which cancels an order if it exists after 'seconds' elapsed.
+
+       order_id: the ID of the order to cancel
+       seconds: number of secs after which active limit order is cancelled
+    """
+
+    time.sleep(seconds)
+    try:
+        kc_client.cancel_order(order_id)
+        print("Couldn't reach target price. order cancelled")
+
+    except:
+        pass
+
+
 """ NEW LISTING FUNCTIONS HERE """
 
 
