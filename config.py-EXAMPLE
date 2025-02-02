@@ -1,0 +1,22 @@
+from kucoin.client import Client as Kucoin_Client
+from pyrogram import Client as PG_Client
+
+# Telegram Information!
+api_id = 'Your Telegram id (remove quotations)'
+api_hash = 'Your Telegram hash'
+
+# Telegram client creation
+tel_client = PG_Client('my_account', api_id, api_hash)
+
+# KuCoin Information!
+api_key = 'Your Kucoin API Key'
+api_secret = 'Your Kucoin API Secret'
+api_passphrase = 'Your Kucoin API passphrase'
+
+# KuCoin Client creation
+kc_client = Kucoin_Client(api_key, api_secret, api_passphrase)
+
+# DISCORD HEADERS FOR SCRAPING
+discord_headers = {
+    'authorization': 'Your Discord auth key'
+}
