@@ -8,6 +8,18 @@ from kucoin.client import Client
 from config import kc_client
 
 class PriceMonitor:
+    """
+    Monitors price and handles actions based on price changes.
+    Methods:
+        start():
+            Starts monitoring in a separate thread.
+        _monitor_price():
+            Monitors price, tracks profit, and checks target price.
+        _display_profit(profit: float):
+            Displays current profit with color coding.
+        _handle_target_reached():
+            Places a limit order when target price is reached.
+    """
 
     def __init__(self, coin_name: str, entry_price: float, deal_amount: float, target_price: float = None):
         self.coin_name = coin_name

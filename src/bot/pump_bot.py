@@ -2,13 +2,13 @@ import multiprocessing
 from typing import Dict, Any
 from config import kc_client, tel_client
 from pyrogram import filters
-from src.bot.price_monitor import PriceMonitor
+from src.bot.state_handlers.price_monitor import PriceMonitor
 from src.utils.formatters import round_down, display_waiting_animation
 from src.utils.telegram_utils import extract_coin_name
 from src.constants import OrderType
 from src.bot.trade_strategies.market_strategy import MarketTradeStrategy
 from src.bot.trade_strategies.limit_strategy import LimitTradeStrategy
-from src.bot.sell_handlers.keyboard_sell_handler import KeyboardSellHandler
+from src.bot.state_handlers.keyboard_sell_handler import KeyboardSellHandler
 from .base_bot import BaseBot
 
 class PumpBot(BaseBot):
@@ -50,18 +50,21 @@ class PumpBot(BaseBot):
                 initial_price=initial_price
             )
 
-        self._setup_sell_handlers(coin_name, deal_amount, entry_price, coin_details)
+        self._setup_trade_monitors(coin_name, deal_amount, entry_price, coin_details)
 
-    def _setup_sell_handlers(
+    def _setup_trade_monitors(
         self,
         coin_name: str,
         deal_amount: float,
         entry_price: float,
         coin_details: Dict[str, Any]
     ) -> None:
+        
+        # Initialize and start keyboard handler
         keyboard_handler = KeyboardSellHandler(coin_name, deal_amount)
         keyboard_handler.start()
 
+        # Activate AutoTarget if target_sell_multiplier is set
         target_price = None
         if self.target_sell_multiplier:
             target_price = round_down(
@@ -69,8 +72,8 @@ class PumpBot(BaseBot):
                 coin_details['priceIncrement']
             )
             print(f"AutoTarget active on {self.target_sell_multiplier}x | Target price: {target_price}")
-
-        # Initialize and start the price monitor
+            print(f"price increment: {coin_details['priceIncrement']}")
+        # Initialize and start the price monitor (which handles profit tracking and target price checks)
         price_monitor = PriceMonitor(
             coin_name=coin_name,
             entry_price=entry_price,
