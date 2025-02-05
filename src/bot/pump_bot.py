@@ -2,15 +2,13 @@ import multiprocessing
 from typing import Dict, Any
 from config import kc_client, tel_client
 from pyrogram import filters
+from src.bot.price_monitor import PriceMonitor
 from src.utils.formatters import round_down, display_waiting_animation
 from src.utils.telegram_utils import extract_coin_name
 from src.constants import OrderType
-from src.bot.price_manager import PriceManager
-from src.trading.profit_tracker import ProfitTracker
 from src.bot.trade_strategies.market_strategy import MarketTradeStrategy
 from src.bot.trade_strategies.limit_strategy import LimitTradeStrategy
 from src.bot.sell_handlers.keyboard_sell_handler import KeyboardSellHandler
-from src.bot.sell_handlers.target_sell_handler import TargetSellHandler
 from .base_bot import BaseBot
 
 class PumpBot(BaseBot):
@@ -52,32 +50,34 @@ class PumpBot(BaseBot):
                 initial_price=initial_price
             )
 
-        price_manager = PriceManager(coin_name)
-        
-        ProfitTracker.track_profit(price_manager.get_current_price, entry_price)
-
-        self._setup_sell_handlers(coin_name, deal_amount, entry_price, coin_details, price_manager)
+        self._setup_sell_handlers(coin_name, deal_amount, entry_price, coin_details)
 
     def _setup_sell_handlers(
         self,
         coin_name: str,
         deal_amount: float,
         entry_price: float,
-        coin_details: Dict[str, Any],
-        price_manager: PriceManager
+        coin_details: Dict[str, Any]
     ) -> None:
         keyboard_handler = KeyboardSellHandler(coin_name, deal_amount)
         keyboard_handler.start()
 
+        target_price = None
         if self.target_sell_multiplier:
             target_price = round_down(
                 entry_price * self.target_sell_multiplier,
                 coin_details['priceIncrement']
             )
             print(f"AutoTarget active on {self.target_sell_multiplier}x | Target price: {target_price}")
-            
-            target_handler = TargetSellHandler(coin_name, deal_amount, target_price, price_manager)
-            target_handler.start()
+
+        # Initialize and start the price monitor
+        price_monitor = PriceMonitor(
+            coin_name=coin_name,
+            entry_price=entry_price,
+            deal_amount=deal_amount,
+            target_price=target_price
+        )
+        price_monitor.start()
 
     def _run_telegram(self, proc: multiprocessing.Process) -> None:
         @tel_client.on_message(filters.chat(self.channel_name))
