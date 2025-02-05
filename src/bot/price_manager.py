@@ -1,4 +1,5 @@
 import time
+from threading import Lock
 from config import kc_client
 from src.constants import DEFAULT_REFRESH_RATE
 
@@ -8,10 +9,13 @@ class PriceManager:
         self.refresh_rate = refresh_rate
         self.current_price = None
         self.last_update_time = 0
+        self._lock = Lock()
 
     def get_current_price(self) -> float:
-        now = time.time()
-        if now - self.last_update_time >= self.refresh_rate:
-            self.current_price = float(kc_client.get_fiat_prices(symbol=self.coin_name)[self.coin_name])
-            self.last_update_time = now
-        return self.current_price
+        with self._lock:
+            now = time.time()
+            if now - self.last_update_time >= self.refresh_rate:
+                print(now - self.last_update_time)
+                self.current_price = float(kc_client.get_fiat_prices(symbol=self.coin_name)[self.coin_name])
+                self.last_update_time = now
+            return self.current_price

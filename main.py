@@ -11,7 +11,7 @@ def main():
         strategy='limit',
         usdt_amount=1,
         order_multiplier=1.00,
-        target_sell_multiplier=0
+        target_sell_multiplier=2
     )
 
     # Example configuration for market strategy

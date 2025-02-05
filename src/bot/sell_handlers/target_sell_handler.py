@@ -1,6 +1,7 @@
 from threading import Thread
 import time
 from kucoin.client import Client
+from src.constants import DEFAULT_REFRESH_RATE
 from src.trading.order_manager import OrderManager
 from src.bot.price_manager import PriceManager
 
@@ -27,4 +28,5 @@ class TargetSellHandler:
                 )
                 print(f"target price reached! placing limit order at price {str(self.target_price)}")
                 break
-            time.sleep(self.price_manager.refresh_rate)
+
+            time.sleep(DEFAULT_REFRESH_RATE / 2)  # Sleep to prevent CPU thrashing

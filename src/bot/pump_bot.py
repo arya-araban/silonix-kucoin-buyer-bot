@@ -53,6 +53,7 @@ class PumpBot(BaseBot):
             )
 
         price_manager = PriceManager(coin_name)
+        
         ProfitTracker.track_profit(price_manager.get_current_price, entry_price)
 
         self._setup_sell_handlers(coin_name, deal_amount, entry_price, coin_details, price_manager)

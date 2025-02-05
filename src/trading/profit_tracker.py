@@ -3,6 +3,8 @@ from threading import Thread
 from typing import Callable
 from sty import fg
 
+from src.constants import DEFAULT_REFRESH_RATE
+
 class ProfitTracker:
     @staticmethod
     def track_profit(price_getter: Callable[[], float], entry_price: float) -> None:
@@ -17,6 +19,6 @@ class ProfitTracker:
                     f'Current Profit = {color + str(profit) + " %" + fg.rs}',
                     end=" "
                 )
-                time.sleep(0.35)
+                time.sleep(DEFAULT_REFRESH_RATE / 2 )  # Sleep to prevent CPU thrashing
 
         Thread(target=tracker).start()
